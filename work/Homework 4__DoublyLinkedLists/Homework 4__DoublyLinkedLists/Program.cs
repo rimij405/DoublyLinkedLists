@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Homework_4__DoublyLinkedLists
 {
-	class Program
+	public class Program
 	{
 		/* SPECIAL COMMANDS */
 		private const string Q = "q";
@@ -18,7 +18,9 @@ namespace Homework_4__DoublyLinkedLists
 		private const string SCRAMBLE = "scramble";
 
 		/* VARIABLES */
+		public static Random random;
 		private static bool isRunning;
+		private static LinkedList linkedList;
 
 		/* MAIN METHOD OF THE TEST CLASS */
 		public static void Main(string[] args)
@@ -34,6 +36,8 @@ namespace Homework_4__DoublyLinkedLists
 			isRunning = true;
 
 			// Set any objects here.
+			linkedList = new LinkedList();
+			random = new Random();
 		}
 
 		/* RUN METHOD */
@@ -42,14 +46,22 @@ namespace Homework_4__DoublyLinkedLists
 			// Main loop.
 			while (isRunning)
 			{
-				// TODO run program here.
+				// Get and process input.
+				TakeUserInput(GetUserInput("Type something: "));
+				Console.WriteLine("< Press enter to continue. >");
+				Console.ReadLine();
+				
+				Console.WriteLine("-----");
 			}
+
+			Console.WriteLine("Thank you! The program will now end!");
+			Console.ReadLine();
 		}
 
 		/* SERVICE METHODS */
 
 		//// USER INPUT
-		private string GetUserInput(string prompt)
+		private static string GetUserInput(string prompt)
 		{
 			// Write prompt.
 			Console.Write(prompt);
@@ -58,19 +70,22 @@ namespace Homework_4__DoublyLinkedLists
 			return Console.ReadLine();
 		}
 
-		private void TakeUserInput(string input)
+		private static void TakeUserInput(string input)
 		{
 			// Check to see if it is a special command.
 			// If it is not a special command, add it to the list.
 			if (!IsSpecial(input))
 			{
-				// TODO add to list here.
+				// Add the input as a string into LinkedList.
+				linkedList.Add(input);
+
+				Console.WriteLine("Appended \"" + input + "\" to the end of the LinkedList.");
 			}
 		}
 
 		// This returns a false if it is not a special command.
 		// If it IS a special command, it also RUNS the command.
-		private bool IsSpecial(string cmd)
+		private static bool IsSpecial(string cmd)
 		{
 			// Set string to lowercase.
 			string str = cmd.ToLower();
@@ -123,21 +138,75 @@ namespace Homework_4__DoublyLinkedLists
 
 
 		/* COMMAND METHODS */
-		private void Quit()
+		private static void Quit()
 		{
+			Console.WriteLine("QUIT(): { end program; }");
+
 			// The program is no longer running.
 			isRunning = false;
 		}
 
-		private void Print() { }
+		private static void Print()
+		{
+			Console.WriteLine("PRINT(): {\n");
+			
+			// Print everything in the list.
+			for (int index = 0; index < linkedList.Count; index++)
+			{
+				Console.WriteLine("\t\"" + linkedList.GetElement(index) + "\"");
+			}
+			
+			Console.WriteLine("\n}");
+		}
 
-		private void Count() { }
+		private static void Count()
+		{
+			Console.WriteLine("COUNT(): {\n");
+			Console.WriteLine("\tThere are " + linkedList.Count + " elements in the LinkedList.");
+			Console.WriteLine("\n}");
+		}
 
-		private void Clear() { }
+		private static void Clear()
+		{
+			Console.WriteLine("Clear(): { clear list; }");
+			linkedList.Clear();
+		}
 
-		private void Remove() { }
+		private static void Remove()
+		{
+			Console.WriteLine("REMOVE(): {\n // REMOVES ONE ELEMENT AT RANDOM\n");
 
-		private void Scramble() { }
+			int index = random.Next(0, (linkedList.Count - 1));
+			Console.WriteLine("\tRemoving element from index: " + index);
+			Console.WriteLine("\tElement removed: \"" + linkedList.Remove(index) + "\"");
+
+			Console.WriteLine("\n}");
+		}
+
+		private static void Scramble()
+		{
+			Console.WriteLine("SCRAMBLE(): {\n");
+
+			// Get random values for the scramble:
+			int itemsToScramble = random.Next(0, (linkedList.Count - 1));
+
+			for (int i = 0; i < itemsToScramble; i++)
+			{
+				int index = random.Next(0, (linkedList.Count - 1)); // Grab the item.
+				string temp = linkedList.Remove(index);
+
+				Console.WriteLine("\tRemoving element from index: " + index);
+				Console.WriteLine("\tElement removed: \"" + temp + "\"");
+
+				int insert = random.Next(0, (linkedList.Count - 1));
+				linkedList.Insert(temp, insert);
+
+				Console.WriteLine("\tInserting element at index: " + insert);
+				Console.WriteLine("\tElement inserted: \"" + linkedList.GetElement(insert) + "\"");
+			}
+
+			Console.WriteLine("\n}");
+		}
 
 	}
 }
